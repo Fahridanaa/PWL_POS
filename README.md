@@ -1,66 +1,78 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Jobsheet 3
+> Nama: Fahridana Ahmad Rayyansyah <br/>
+> Absen: 11 <br/>
+> Kelas: TI-2F
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Tugas
+1. Pada **Praktikum 1 - Tahap 5**, apakah fungsi dari APP_KEY pada file setting .env Laravel? <br/>
+    **Jawab :**
+    > untuk mengenkripsi data pengguna, APP_KEY juga digunakan dalam hashing dan dalam proses otentikasi.
 
-## About Laravel
+2. Pada **Praktikum 1**, bagaimana kita men-generate nilai untuk APP_KEY? <br/>
+   **Jawab :**
+    > dengan menuliskan `php artisan key:generate` di terminal
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+3. Pada **Praktikum 2.1 - Tahap 1**, secara default Laravel memiliki berapa file migrasi?
+   dan untuk apa saja file migrasi tersebut? <br/>
+   **Jawab :**
+    > File - file ini merupakan bagian dari setup default laravel 
+   > dan file ini bertujuan untuk membuat struktur awal database
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+4. Secara default, file migrasi terdapat kode `$table->timestamps();`, apa tujuan/output
+   dari fungsi tersebut? <br/>
+    **Jawab :**
+    > kode `$table->timestamps();` bertujuan untuk menambah dua kolom, yaitu kolom
+   > `created_at` dan `updated_at` ke dalam tabel. fungsi `created_at` digunakan untuk
+   > mencatat kapan baris/data tersebut dibuat, sedangkan fungsi `updated_at` digunakan
+   > untuk mencatat kapan terakhir kali baris/data tersebut diperbarui
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+5. Pada File Migrasi, terdapat fungsi `$table->id();` Tipe data apa yang dihasilkan dari
+   fungsi tersebut? <br/>
+    **Jawab :**
+    > fungsi kode tersebut untuk membuat kolom id pada tabel dan akan diatur sebagai
+   > primary key
 
-## Learning Laravel
+6. Apa bedanya hasil migrasi pada table m_level, antara menggunakan `$table->id();`
+   dengan menggunakan `$table->id('level_id');` ?<br/>
+   **Jawab :**
+   > perbedaannya ada di nama kolom tersebut, jika hanya `$table->id();` maka akan membuat
+   > kolom dengan nama **id** sedangkan `$table->id('level_id');` akan membuat kolom dengan nama
+   > **level_id**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+7. Pada migration, Fungsi `->unique()` digunakan untuk apa?<br/>
+   **Jawab :**
+   > fungsi tersebut digunakan agar suatu kolom harus memiliki nilai yang unik, maksudnya tidak ada
+   > dua baris yang dapat memiliki nilai sama di kolom tersebut 
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+8. Pada **Praktikum 2.2 - Tahap 2**, kenapa kolom level_id pada tabel `m_user`
+   menggunakan `$tabel->unsignedBigInteger('level_id')`, sedangkan kolom `level_id`
+   pada tabel `m_level` menggunakan `$tabel->id('level_id')` ? <br/>
+   **Jawab :**
+    > karena `level_id` pada tabel `m_user` merupakan sebuah **FOREIGN KEY** dari tabel `m_level` sehingga
+dibutuhkan tipe data yang menampung integer yang besar, sedangkan pada tabel `m_level` menggunakan id karena
+   kolom `level_id` merupakan **PRIMARY KEY** dari tabel `m_level`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+9. Pada **Praktikum 3 - Tahap 6**, apa tujuan dari Class Hash? dan apa maksud dari kode
+   program `Hash::make('1234');`? <br/>
+   **Jawab :**
+   > class Hash digunakan untuk mengenkripsi data yang memang perlu disimpan dalam bentuk terenkripsi.
+kode `Hash::make('1234');` digunakan untuk menghasilkan versi hashed dari '1234'
 
-## Laravel Sponsors
+10. Pada **Praktikum 4 - Tahap 3/5/7**, pada query builder terdapat tanda tanya `(?)`, apa
+    kegunaan dari tanda tanya `(?)` tersebut? <br/>
+    **Jawab :**
+   > digunakan untuk placeholder untuk nilai yang akan disisipkan ke dalam query
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+11. Pada **Praktikum 6 - Tahap 3**, apa tujuan penulisan kode `protected $table = ‘m_user’;` 
+    dan `protected $primaryKey = ‘user_id’;` ? <br/>
+    **Jawab :**
+   > kode tersebut digunakan untuk mendeklarasi nama tabel dan kolom `PRIMARY KEY` yang akan digunakan
+> pada model tersebut. Memakai modifier `protected` agar variabel tersebut hanya dapat diakses
+   dari dalam class itu sendiri dan class turunannya
 
-### Premium Partners
+12. Menurut kalian, lebih mudah menggunakan mana dalam melakukan operasi CRUD ke
+    database (DB Façade / Query Builder / Eloquent ORM) ? jelaskan <br/>
+    **Jawab :**
+   > Menurut saya lebih mudah memakai Eloquent ORM karena saya lebih suka pendekatan yang abstrak dan berorientasi
+> objek dalam berinteraksi dengan database
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
