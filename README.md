@@ -2,17 +2,35 @@
 > Absen: 11 <br/>
 > Kelas: TI-2F
 
-# Jobsheet 5
+# Jobsheet 6
+
+## Hasil Praktikum
+1. Table Level
+   ![Level](public/screenshot/js6/1.png)
+2. Table User
+   ![user](public/screenshot/js6/2.png)
+   1. create
+      ![create](public/screenshot/js6/6.png)
+   2. show
+      ![show](public/screenshot/js6/3.png)
+   3. edit
+      ![edit](public/screenshot/js6/4.png)
+   4. delete
+      ![delete](public/screenshot/js6/5.png)
 
 ## Tugas Praktikum
-1. Tambahkan button Add di halam manage kategori, yang mengarah ke create kategori baru
-   ![add Button](./public/screenshot/js4/1.gif)
-2. Tambahkan menu untuk halaman manage kategori, di daftar menu navbar
-   ![kategori in sidebar](./public/screenshot/js4/2.png)
-3. Tambahkan action edit di datatables dan buat halaman edit serta controllernya
-   ![add Button](./public/screenshot/js4/3.gif)
-4. Tambahkan action delete di datatables serta controllernya
-   ![add Button](./public/screenshot/js4/4.gif)
+1. Coba tampilkan level_id pada halaman web tersebut dimana field ini merupakan foreign key<br/>
+   **Jawab:**
+   > Aman <br>
+   > ![user](public/screenshot/js6/2.png)
+2. Modifikasi dengan tema/ template kesukaan Anda<br/>
+   **Jawab:**
+   > Kebetulan saya suka tema yang default
+3. Apa fungsi $request->validate, $error dan alert yang ada pada halaman CRUD tersebut<br/>
+   **Jawab:**
+   > * fungsi `$request->validate` adalah untuk melakukan validasi terhadap data yang diterima
+   > * `$errors` digunakan untuk menampilkan error validasi pada view
+   > * `$alert` digunakan untuk menampilkan pemberitahuan ke pengguna
 
 [//]: # (# Jobsheet 3)
 
