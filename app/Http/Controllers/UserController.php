@@ -55,7 +55,7 @@ class UserController extends Controller
 					. url('/user/'.$user->user_id).'">'
 					. csrf_field()
 					. method_field('DELETE')
-					. '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
+					. '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
 				return $btn;
 			})
 			->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
@@ -143,7 +143,7 @@ class UserController extends Controller
 			'username' => 'required|string|min:3|unique:m_user,username'.$id.',user_id',
 			'name' => 'required|string|max:100', // nama harus diisi, berupa string, dan maksimal 100 karakter
 			'password' => 'required|min:5', // password harus diisi dan minimal 5 karakter
-			'level+id' => 'required|integer' // level_id harus diisi dan berupa angka
+			'level_id' => 'required|integer' // level_id harus diisi dan berupa angka
 		]);
 
 		UserModel::find($id)->update([
