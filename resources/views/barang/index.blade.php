@@ -14,11 +14,28 @@
             @if(session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-1 control-label col-form-label">Filter:</label>
+                            <div class="col-3">
+                                <select name="kategori_id" id="kategori_id" class="form-control" required>
+                                    <option value="">- Semua -</option>
+                                    @foreach($kategori as $item)
+                                        <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted">Kategori Barang</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <table class="table table-bordered table-striped table-hover table-sm w-100" id="table_barang">
                 <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nama Barang</th>
+                    <th>Kategori Barang</th>
                     <th>Harga Beli</th>
                     <th>Harga Jual</th>
                     <th>aksi</th>
@@ -35,12 +52,15 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            $('#table_barang').DataTable({
+            var dataBarang = $('#table_barang').DataTable({
                 serverSide: true, // serverSide: true, jika ingin menggunakan server side processing
                 ajax: {
                     "url": "{{ url('barang/list') }}",
                     "dataType": "json",
                     "type": "POST",
+                    "data": function (d) {
+                        d.kategori_id = $('#kategori_id').val();
+                    }
                 },
                 columns: [
                     {
@@ -48,22 +68,27 @@
                         className: "text-center",
                         orderable: false,
                         searchable: false
-                    },{
+                    }, {
                         data: "barang_name",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari
-                    },{
+                    }, {
+                        data: "kategori.kategori_nama",
+                        className: "",
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
+                    }, {
                         data: "harga_beli",
                         className: "",
                         orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
                         searchable: false // searchable: true, jika ingin kolom ini bisa dicari
-                    },{
+                    }, {
                         data: "harga_jual",
                         className: "",
                         orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
                         searchable: false // searchable: true, jika ingin kolom ini bisa dicari
-                    },{
+                    }, {
                         data: "aksi",
                         className: "",
                         orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
@@ -71,6 +96,10 @@
                     }
                 ]
             });
+
+            $('#kategori_id').on('change', () => {
+                dataBarang.ajax.reload();
+            })
         });
     </script>
 @endpush

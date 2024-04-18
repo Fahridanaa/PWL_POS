@@ -17,7 +17,7 @@
             <table class="table table-bordered table-striped table-hover table-sm w-100" id="table_level">
                 <thead>
                 <tr>
-                    <th>Kode</th>
+                    <th>id</th>
                     <th>Level</th>
                     <th>Aksi</th>
                 </tr>
@@ -42,10 +42,10 @@
                 },
                 columns: [
                     {
-                        data: "level_kode",
-                        className: "",
-                        orderable: true, // orderable: true, jika ingin kolom ini bisa diurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisa dicari
+                        data: "DT_RowIndex", // nomor urut dari laravel datatable addIndexColumn()
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false
                     },{
                         data: "level_nama",
                         className: "",

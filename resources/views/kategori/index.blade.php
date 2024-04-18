@@ -18,7 +18,6 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Kode</th>
                     <th>Nama</th>
                     <th>aksi</th>
                 </tr>
@@ -47,11 +46,6 @@
                         className: "text-center",
                         orderable: false,
                         searchable: false
-                    },{
-                        data: "kategori_kode",
-                        className: "",
-                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
                         data: "kategori_nama",
                         className: "",

@@ -18,9 +18,11 @@
                 <thead>
                 <tr>
                     <th>ID</th>
+                    <th>User</th>
                     <th>Pembeli</th>
-                    <th>kode Penjualan</th>
-                    <th>Tanggal Penjualan</th>
+                    <th>Nama Barang</th>
+                    <th>Harga</th>
+                    <th>Jumlah</th>
                     <th>aksi</th>
                 </tr>
                 </thead>
@@ -49,20 +51,30 @@
                         orderable: false,
                         searchable: false
                     },{
-                        data: "pembeli",
+                        data: "penjualan.user.name",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
-                        data: "penjualan_kode",
+                        data: "penjualan.pembeli",
                         className: "",
-                        orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
-                        searchable: false // searchable: true, jika ingin kolom ini bisa dicari
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
-                        data: "penjualan_tanggal",
+                        data: "barang.barang_name",
                         className: "",
-                        orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
-                        searchable: false // searchable: true, jika ingin kolom ini bisa dicari
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
+                    },{
+                        data: "harga",
+                        className: "",
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
+                    },{
+                        data: "jumlah",
+                        className: "",
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
                         data: "aksi",
                         className: "",

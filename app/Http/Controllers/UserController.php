@@ -86,7 +86,7 @@ class UserController extends Controller
 			'username' => 'required|string|min:3|unique:m_user,username',
 			'name' => 'required|string|max:100', // nama harus diisi, berupa string, dan maksimal 100 karakter
 			'password' => 'required|min:5', // password harus diisi dan minimal 5 karakter
-			'level+id' => 'required|integer' // level_id harus diisi dan berupa angka
+			'level_id' => 'required|integer' // level_id harus diisi dan berupa angka
 		]);
 
 		UserModel::create([
@@ -135,15 +135,13 @@ class UserController extends Controller
 		return view('user.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'level' => $level, 'activeMenu' => $activeMenu]);
 	}
 
-	public function update(Request $request, string $id): Application|Redirector|RedirectResponse|ApplicationContract
+	public function update(Request $request, string $id)
 	{
 		$request->validate([
-			// username harus diisi, berupa string, minimal 3 karakter,
-			// dan bernilai unik di tabel m_user kolom username kecuali untuk user dengan id yang sedang diedit
-			'username' => 'required|string|min:3|unique:m_user,username'.$id.',user_id',
-			'name' => 'required|string|max:100', // nama harus diisi, berupa string, dan maksimal 100 karakter
-			'password' => 'required|min:5', // password harus diisi dan minimal 5 karakter
-			'level_id' => 'required|integer' // level_id harus diisi dan berupa angka
+			'username' => 'required|string|min:3|unique:m_user,username,'.$id.',user_id',
+			'name' => 'required|string|max:100',
+			'password' => 'nullable|min:5',
+			'level_id' => 'required|integer'
 		]);
 
 		UserModel::find($id)->update([

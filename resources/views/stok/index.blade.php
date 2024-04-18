@@ -18,9 +18,10 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>tanggal</th>
+                    <th>user</th>
                     <th>nama barang</th>
                     <th>stok</th>
+                    <th>tanggal</th>
                     <th>aksi</th>
                 </tr>
                 </thead>
@@ -49,7 +50,7 @@
                         orderable: false,
                         searchable: false
                     },{
-                        data: "stok_tanggal",
+                        data: "user.name",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari
@@ -63,6 +64,11 @@
                         className: "",
                         orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
                         searchable: false // searchable: true, jika ingin kolom ini bisa dicari
+                    },{
+                        data: "stok_tanggal",
+                        className: "",
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
                         data: "aksi",
                         className: "",
