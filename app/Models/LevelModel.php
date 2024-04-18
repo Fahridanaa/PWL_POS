@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|LevelModel whereLevelKode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LevelModel whereLevelNama($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LevelModel whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $user
+ * @property-read int|null $user_count
  * @mixin \Eloquent
  */
 class LevelModel extends Model
@@ -32,7 +35,7 @@ class LevelModel extends Model
 
 	protected $fillable = ['level_id', 'level_kode', 'level_nama'];
 
-	public function user()
+	public function user(): HasMany
 	{
 		return $this->hasMany(User::class, 'level_id', 'level_id');
 	}

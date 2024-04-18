@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|UserModel whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserModel whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserModel whereUsername($value)
+ * @property-read \App\Models\LevelModel $level
  * @mixin \Eloquent
  */
 class UserModel extends Model
