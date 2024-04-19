@@ -83,23 +83,29 @@ class BarangController extends Controller
 
 	public function store(Request $request): Application|Redirector|RedirectResponse|ApplicationContract
 	{
-		$request->validate([
-			'barang_kode' => 'required|string|min:3|unique:m_barang,barang_kode',
-			'barang_name' => 'required|string|max:50',
-			'harga_beli' => 'required|integer',
-			'harga_jual' => 'required|integer',
-			'kategori_id' => 'required|integer'
-		]);
+		try{
+			$request->validate([
+				'barang_kode' => 'required|string|min:3|unique:m_barang,barang_kode',
+				'barang_name' => 'required|string|max:50',
+				'harga_beli' => 'required|integer',
+				'harga_jual' => 'required|integer',
+				'kategori_id' => 'required|integer'
+			]);
 
-		BarangModel::create([
-			'barang_kode' => $request->barang_kode,
-			'barang_name' => $request->barang_name,
-			'harga_beli' => $request->harga_beli,
-			'harga_jual' => $request->harga_jual,
-			'kategori_id' => $request->kategori_id
-		]);
+			BarangModel::create([
+				'barang_kode' => $request->barang_kode,
+				'barang_name' => $request->barang_name,
+				'harga_beli' => $request->harga_beli,
+				'harga_jual' => $request->harga_jual,
+				'kategori_id' => $request->kategori_id
+			]);
 
-		return redirect('/barang')->with('success', 'Data barang berhasil disimpan');
+			return redirect('/barang')->with('success', 'Data barang berhasil disimpan');
+		}catch (\Exception $e)
+		{
+			return redirect('/barang')->with('error', 'Data penjualan gagal disimpan, Kesalahan: '.$e->getMessage());
+		}
+
 	}
 
 	public function show(string $id): View|Application|Factory|ApplicationContract

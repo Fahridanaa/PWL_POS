@@ -111,11 +111,11 @@ class TransaksiController extends Controller
 			]);
 
 			DB::commit();
+			return redirect('/penjualan')->with('success', 'Data penjualan berhasil disimpan');
 		} catch (\Exception $e) {
 			DB::rollback();
+			return redirect('/penjualan')->with('error', 'Data penjualan gagal disimpan, Kesalahan: '.$e->getMessage());
 		}
-
-		return redirect('/penjualan')->with('success', 'Data penjualan berhasil disimpan');
 	}
 
 	public function show(string $id): View|Application|Factory|ApplicationContract
