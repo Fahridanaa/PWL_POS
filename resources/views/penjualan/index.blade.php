@@ -23,6 +23,7 @@
                     <th>Nama Barang</th>
                     <th>Harga</th>
                     <th>Jumlah</th>
+                    <th>Total</th>
                     <th>aksi</th>
                 </tr>
                 </thead>
@@ -72,6 +73,11 @@
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
                         data: "jumlah",
+                        className: "",
+                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
+                    },{
+                        data: "total",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari

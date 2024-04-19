@@ -57,6 +57,9 @@ class TransaksiController extends Controller
 					. '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
 				return $btn;
 			})
+			->addColumn('total', function($detail){
+				return $detail->harga * $detail->jumlah;
+			})
 			->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
 			->make(true);
 	}
