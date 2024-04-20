@@ -9,6 +9,20 @@
             <form method="POST" action="{{ url('barang') }}" class="form-horizontal">
                 @csrf
                 <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Kategori</label>
+                    <div class="col-11">
+                        <select class="form-control" id="kategori_id" name="kategori_id" required>
+                            <option value="">- Pilih Kategori -</option>
+                            @foreach($kategori as $item)
+                                <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('kategori_id')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Kode</label>
                     <div class="col-11">
                         <input type="text" class="form-control" id="barang_kode" name="barang_kode"
@@ -44,20 +58,6 @@
                         <input type="number" class="form-control" id="harga_jual" name="harga_jual"
                                value="{{ old('harga_jual') }}" required>
                         @error('harga_jual')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Kategori</label>
-                    <div class="col-11">
-                        <select class="form-control" id="kategori_id" name="kategori_id" required>
-                            <option value="">- Pilih Kategori -</option>
-                            @foreach($kategori as $item)
-                                <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
-                            @endforeach
-                        </select>
-                        @error('kategori_id')
                         <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
