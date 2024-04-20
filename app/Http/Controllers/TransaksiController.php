@@ -62,7 +62,6 @@ class TransaksiController extends Controller
 			->addIndexColumn()
 			->addColumn('aksi', function ($penjualan) {
 				$btn = '<a href="'.url('/penjualan/' . $penjualan->penjualan_id).'" class="btn btn-info btn-sm">Detail</a> ';
-				$btn .= '<a href="'.url('/penjualan/' . $penjualan->penjualan_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
 				return $btn;
 			})
 			->addColumn('total', function ($penjualan) {
