@@ -6,7 +6,7 @@
             <div class="card-tools"></div>
         </div>
         <div class="card-body">
-            @empty($detail)
+            @empty($penjualan)
                 <div class="alert alert-danger alert-dismissible">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
                     Data yang Anda cari tidak ditemukan.
@@ -15,32 +15,60 @@
                 <table class="table table-bordered table-striped table-hover table-sm">
                     <tr>
                         <th>ID</th>
-                        <td>{{ $detail->detail_id }}</td>
+                        <td>{{ $penjualan->penjualan_id }}</td>
                     </tr>
                     <tr>
                         <th>Penjualan Kode</th>
-                        <td>{{ $detail->penjualan->penjualan_kode }}</td>
+                        <td>{{ $penjualan->penjualan_kode }}</td>
                     </tr>
                     <tr>
                         <th>User</th>
-                        <td>{{ $detail->penjualan->user->name }}</td>
+                        <td>{{ $penjualan->user->name }}</td>
                     </tr>
                     <tr>
                         <th>Pembeli</th>
-                        <td>{{ $detail->penjualan->pembeli }}</td>
-                    </tr>
-                    <tr>
-                        <th>Harga</th>
-                        <td>{{ $detail->harga }}</td>
-                    </tr>
-                    <tr>
-                        <th>Jumlah</th>
-                        <td>{{ $detail->jumlah }}</td>
+                        <td>{{ $penjualan->pembeli }}</td>
                     </tr>
                     <tr>
                         <th>penjualan_tanggal</th>
-                        <td>{{ $detail->penjualan->penjualan_tanggal }}</td>
+                        <td>{{ $penjualan->penjualan_tanggal }}</td>
                     </tr>
+                </table>
+                <h5 class="mt-4">Detail Penjualan</h5>
+                <table class="table table-bordered table-striped table-hover table-sm">
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Harga Jual</th>
+                        <th>Jumlah</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @php
+                        $total = 0;
+                    @endphp
+                    @foreach($detail as $item)
+                        @php
+                            $subtotal = $item->harga * $item->jumlah;
+                            $total += $subtotal;
+                        @endphp
+                        <tr>
+                            <td>{{ $count++ }}</td>
+                            <td>{{ $item->barang->barang_kode }}</td>
+                            <td>{{ $item->barang->barang_name }}</td>
+                            <td>{{ $item->harga }}</td>
+                            <td>{{ $item->jumlah }}</td>
+                            <td>{{ "Rp. ". $subtotal }}</td>
+                        </tr>
+                    @endforeach
+                    <tr style="background-color: white;">
+                        <td colspan="5"><b>Total Penjualan</b></td>
+                        <td>{{ "Rp. ". $total }}</td>
+                    </tr>
+                    </tbody>
                 </table>
             @endempty
             <a href="{{ url('penjualan') }}" class="btn btn-sm btn-default mx-2">Kembali</a>

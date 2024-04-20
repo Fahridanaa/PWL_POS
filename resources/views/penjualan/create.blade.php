@@ -11,8 +11,8 @@
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Kode Penjualan</label>
                     <div class="col-11">
-                        <input type="text" class="form-control" id="penjualan_kode" name="penjualan_kode"
-                               value="{{ old('penjualan_kode') }}" required>
+                        <input readonly type="text" class="form-control" id="penjualan_kode" name="penjualan_kode"
+                               value="{{ old('penjualan_kode', $kode_penjualan) }}" required>
                         @error('penjualan_kode')
                         <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -28,39 +28,37 @@
                         @enderror
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Barang</label>
-                    <div class="col-11">
-                        <select class="form-control" id="barang_id" name="barang_id" required>
-                            <option value="">- Pilih Barang -</option>
-                            @foreach($barang as $item)
-                                <option value="{{ $item->barang_id }}">{{ $item->barang_name }}</option>
-                            @endforeach
-                        </select>
-                        @error('barang_id')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Harga</label>
-                    <div class="col-11">
-                        <input type="text" class="form-control" id="harga" name="harga"
-                               value="{{ old('harga') }}" required>
-                        @error('harga')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Jumlah</label>
-                    <div class="col-11">
-                        <input type="text" class="form-control" id="jumlah" name="jumlah"
-                               value="{{ old('jumlah') }}" required>
-                        @error('jumlah')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+
+                <div class="form-group">
+                    <label for="detail">Detail Penjualan:</label>
+                    <table class="table table-bordered" id="detail">
+                        <thead>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Total Harga</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <select name="barang_id[]" class="form-control barang" required>
+                                    <option value="">Pilih Barang</option>
+                                    @foreach ($barang as $item)
+                                        <option value="{{ $item->barang_id }}">{{ $item->barang_name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td><input type="number" class="form-control harga" name="harga[]" readonly></td>
+                            <td><input type="number" class="form-control jumlah" name="jumlah[]" required></td>
+                            <td>
+                                <input type="number" class="form-control total_harga" name="total_harga[]" readonly>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-sm" id="tambahBarang">Tambah Barang</button>
                 </div>
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label"></label>
@@ -76,4 +74,45 @@
 @push('css')
 @endpush
 @push('js')
+    <script>
+        $(document).ready(function() {
+            // Ketika tombol "Tambah Barang" diklik
+            $('#tambahBarang').click(function() {
+                // Tambahkan baris baru ke tabel detail penjualan
+                $('#detail tbody').append('<tr>' +
+                    '<td><select name="barang_id[]" class="form-control barang" required><option value="">Pilih Barang</option>@foreach ($barang as $item)<option value="{{ $item->barang_id }}">{{ $item->barang_name }}</option>@endforeach</select></td>' +
+                    '<td><input type="text" class="form-control harga" name="harga[]" readonly></td>' +
+                    '<td><input type="number" class="form-control jumlah" name="jumlah[]" required></td>' +
+                    '<td><input type="number" class="form-control total_harga" name="total_harga[]" readonly></td>' +
+                    '</tr>');
+            });
+
+            let detailTable = $('#detail');
+            // Ketika dropdown barang dipilih, perbarui harga secara otomatis
+            detailTable.on('change', 'select[name="barang_id[]"]', function() {
+                var selectedId = $(this).val();
+                var hargaInput = $(this).closest('tr').find('.harga');
+                // Melakukan AJAX request untuk mendapatkan harga barang berdasarkan ID yang dipilih
+                $.ajax({
+                    url: '{{ url("penjualan/get-harga") }}/' + selectedId,
+                    type: 'GET',
+                    success: function(response) {
+                        hargaInput.val(response.harga_jual);
+                    },
+                    error: function() {
+                        hargaInput.val('');
+                    }
+                });
+            });
+
+            detailTable.on('input', 'input[name="jumlah[]"]', function() {
+                let jumlah = $(this).val() || 0;
+                let harga = $(this).closest('tr').find('.harga').val();
+                let totalHargaInput = $(this).closest('tr').find('.total_harga');
+
+                let totalHarga = harga * jumlah;
+                totalHargaInput.val(totalHarga.toFixed(2));
+            });
+        });
+    </script>
 @endpush

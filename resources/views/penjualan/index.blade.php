@@ -20,9 +20,6 @@
                     <th>ID</th>
                     <th>User</th>
                     <th>Pembeli</th>
-                    <th>Nama Barang</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
                     <th>Total</th>
                     <th>aksi</th>
                 </tr>
@@ -52,27 +49,12 @@
                         orderable: false,
                         searchable: false
                     },{
-                        data: "penjualan.user.name",
+                        data: "user.name",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari
                     },{
-                        data: "penjualan.pembeli",
-                        className: "",
-                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
-                    },{
-                        data: "barang.barang_name",
-                        className: "",
-                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
-                    },{
-                        data: "harga",
-                        className: "",
-                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
-                    },{
-                        data: "jumlah",
+                        data: "pembeli",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
                         searchable: true // searchable: true, jika ingin kolom ini bisadicari

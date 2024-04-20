@@ -81,9 +81,9 @@ Route::group(['prefix' => 'penjualan'], function () {
 	Route::get('/', [TransaksiController::class, 'index']);
 	Route::post('/list', [TransaksiController::class, 'list']);
 	Route::get('/create', [TransaksiController::class, 'create']);
+	Route::get('/get-harga/{id}', [TransaksiController::class, 'getHarga']);
 	Route::post('/', [TransaksiController::class, 'store']);
 	Route::get('/{id}', [TransaksiController::class, 'show']);
 	Route::get('/{id}/edit', [TransaksiController::class, 'edit']);
 	Route::put('/{id}', [TransaksiController::class, 'update']);
-	Route::delete('/{id}', [TransaksiController::class, 'destroy']);
 });
