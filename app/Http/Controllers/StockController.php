@@ -45,13 +45,7 @@ class StockController extends Controller
 		return DataTables::of($stocks)
 			->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
 			->addColumn('aksi', function ($stock) {
-				$btn = '<a href="'.url('/stok/' . $stock->stok_id).'" class="btn btn-info btn-sm">Detail</a> ';
-				$btn .= '<a href="'.url('/stok/' . $stock->stok_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
-				$btn .= '<form class="d-inline-block" method="POST" action="'
-					. url('/stok/'.$stock->stok_id).'">'
-					. csrf_field()
-					. method_field('DELETE')
-					. '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
+				$btn = '<a href="'.url('/stok/' . $stock->stok_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
 				return $btn;
 			})
 			->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
@@ -74,25 +68,6 @@ class StockController extends Controller
 		$activeMenu = 'stok'; // set menu yang sedang aktif
 
 		return view('stok.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'barang' => $barang, 'activeMenu' => $activeMenu]);
-	}
-
-	public function store(Request $request): Application|Redirector|RedirectResponse|ApplicationContract
-	{
-		$request->validate([
-			'barang_id' => 'required|integer',
-			'stok_jumlah' => 'required|integer'
-		]);
-
-		$datetime = (new DateTime())->setTimezone(new \DateTimeZone("Asia/Jakarta"));
-
-		StockModel::create([
-			'barang_id' => $request->barang_id,
-			'stok_jumlah' => $request->stok_jumlah,
-			'user_id' => 1,
-			'stok_tanggal' => $datetime
-		]);
-
-		return redirect('/stok')->with('success', 'Data barang berhasil disimpan');
 	}
 
 	public function show(string $id): View|Application|Factory|ApplicationContract
@@ -148,21 +123,5 @@ class StockController extends Controller
 		]);
 
 		return redirect('/stok')->with('success', 'Data stok berhasil diubah');
-	}
-
-	public function destroy(string $id): Application|Redirector|RedirectResponse|ApplicationContract
-	{
-		$check = StockModel::find($id);
-		if(!$check) {
-			return redirect('/stok')->with('error', 'Data stok tidak ditemukan');
-		}
-
-		try {
-			StockModel::destroy($id);
-
-			return redirect('/stok')->with('success', 'Data stok berhasil dihapus');
-		}catch (QueryException $e) {
-			return redirect('/stok')->with('error', 'Data stok gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
-		}
 	}
 }

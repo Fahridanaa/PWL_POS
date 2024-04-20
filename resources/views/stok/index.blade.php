@@ -3,9 +3,7 @@
     <div class="card card-outline card-primary">
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
-            <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">Tambah</a>
-            </div>
+            <div class="card-tools"></div>
         </div>
         <div class="card-body">
             @if(session('success'))
@@ -52,13 +50,13 @@
                     },{
                         data: "user.name",
                         className: "",
-                        orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
+                        orderable: false, // orderable: true, jika ingin kolom ini bisadiurutkan
+                        searchable: false // searchable: true, jika ingin kolom ini bisadicari
                     },{
                         data: "barang.barang_name",
                         className: "",
                         orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
-                        searchable: false // searchable: true, jika ingin kolom ini bisa dicari
+                        searchable: true // searchable: true, jika ingin kolom ini bisa dicari
                     },{
                         data: "stok_jumlah",
                         className: "",
@@ -68,7 +66,7 @@
                         data: "stok_tanggal",
                         className: "",
                         orderable: true, // orderable: true, jika ingin kolom ini bisadiurutkan
-                        searchable: true // searchable: true, jika ingin kolom ini bisadicari
+                        searchable: false // searchable: true, jika ingin kolom ini bisadicari
                     },{
                         data: "aksi",
                         className: "",
