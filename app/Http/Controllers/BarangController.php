@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BarangModel;
 use App\Models\KategoriModel;
+use App\Models\StockModel;
+use DateTime;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -83,6 +85,7 @@ class BarangController extends Controller
 
 	public function store(Request $request): Application|Redirector|RedirectResponse|ApplicationContract
 	{
+		$datetime = (new DateTime())->setTimezone(new \DateTimeZone("Asia/Jakarta"));
 		try{
 			$request->validate([
 				'barang_kode' => 'required|string|min:3|unique:m_barang,barang_kode',
@@ -92,12 +95,19 @@ class BarangController extends Controller
 				'kategori_id' => 'required|integer'
 			]);
 
-			BarangModel::create([
+			$barang = BarangModel::create([
 				'barang_kode' => $request->barang_kode,
 				'barang_name' => $request->barang_name,
 				'harga_beli' => $request->harga_beli,
 				'harga_jual' => $request->harga_jual,
 				'kategori_id' => $request->kategori_id
+			]);
+
+			StockModel::create([
+				'barang_id' => $barang->barang_id,
+				'user_id' => 1,
+				'stok_tanggal' => $datetime,
+				'stok_jumlah' => 0
 			]);
 
 			return redirect('/barang')->with('success', 'Data barang berhasil disimpan');
