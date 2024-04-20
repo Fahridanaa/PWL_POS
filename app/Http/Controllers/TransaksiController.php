@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BarangModel;
 use App\Models\PenjualanDetailModel;
 use App\Models\PenjualanModel;
+use App\Models\StockModel;
 use DateTime;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Contracts\View\Factory;
@@ -116,13 +117,25 @@ class TransaksiController extends Controller
 			$jumlahArr = $request->jumlah;
 
 			for ($i = 0; $i < count($barangIdArr); $i++) {
+				$stokBarang = StockModel::where('barang_id', $barangIdArr[$i])->first()->stok_jumlah;
+
+				if ($jumlahArr[$i] > $stokBarang) {
+					DB::rollback();
+					return redirect('/penjualan')->with('error', 'Stok barang tidak mencukupi');
+				}
+
 				PenjualanDetailModel::create([
 					'penjualan_id' => $penjualan->penjualan_id,
 					'barang_id' => $barangIdArr[$i],
 					'harga' => $hargaArr[$i],
 					'jumlah' => $jumlahArr[$i],
 				]);
+
+				$stok = StockModel::where('barang_id', $barangIdArr[$i])->first();
+				$stok->stok_jumlah = $stokBarang - $jumlahArr[$i];
+				$stok->save();
 			}
+
 			DB::commit();
 			return redirect('/penjualan')->with('success', 'Data penjualan berhasil disimpan');
 		} catch (\Exception $e) {
@@ -151,106 +164,98 @@ class TransaksiController extends Controller
 		return view('penjualan.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'penjualan' => $penjualan, 'detail' => $detail, 'count' => $count, 'activeMenu' => $activeMenu]);
 	}
 
-	public function edit(string $id)
-	{
-		$penjualan = PenjualanModel::with(['details' => function ($query) {
-			$query->withTrashed();
-		}, 'details.barang'])->findOrFail($id);
-		$barang = BarangModel::all();
+//	public function edit(string $id)
+//	{
+//		$penjualan = PenjualanModel::with(['details' => function ($query) {
+//			$query->withTrashed();
+//		}, 'details.barang'])->findOrFail($id);
+//		$barang = BarangModel::all();
+//
+//		$breadcrumb = (object) [
+//			'title' => 'Edit Penjualan',
+//			'list' => ['Home', 'Penjualan', 'Edit']
+//		];
+//
+//		$page = (object) [
+//			'title' => 'Edit penjualan'
+//		];
+//
+//		$activeMenu = 'penjualan';
+//		return view('penjualan.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'penjualan'=>$penjualan, 'barang' => $barang, 'activeMenu' => $activeMenu]);
+//	}
 
-		$breadcrumb = (object) [
-			'title' => 'Edit Penjualan',
-			'list' => ['Home', 'Penjualan', 'Edit']
-		];
+//	public function update(Request $request, string $id): ApplicationContract|Application|RedirectResponse|Redirector|\Exception
+//	{
+//		try {
+//			$request->validate([
+//				'penjualan_kode' => ['required', 'string', 'min:3', Rule::unique('t_penjualan')->ignore($id, 'penjualan_id')],
+//				'pembeli' => 'required|string',
+//				'detail_id' => 'required|array',
+//				'barang_id' => 'required|array',
+//				'harga' => 'required|array',
+//				'jumlah' => 'required|array',
+//				'deleted' => 'present|array',
+//				'restored' => 'present|array',
+//			]);
+//
+//			DB::beginTransaction();
+//
+//			$penjualan = PenjualanModel::findOrFail($id);
+//
+//			$penjualan->update([
+//				'pembeli' => $request->pembeli,
+//				'penjualan_kode' => $request->penjualan_kode,
+//			]);
+//
+//			$penjualan->penjualan_tanggal = (new DateTime())->setTimezone(new \DateTimeZone("Asia/Jakarta"));
+//			$penjualan->save();
+//
+//			$detailIds = $request->detail_id;
+//			$barangIds = $request->barang_id;
+//			$hargas = $request->harga;
+//			$jumlahs = $request->jumlah;
+//
+//			for($i = 0; $i < count($detailIds); $i++) {
+//				if ($detailIds[$i]) {
+//					$detail = PenjualanDetailModel::findOrFail($detailIds[$i]);
+//					$detail->update([
+//						'barang_id' => $barangIds[$i],
+//						'harga' => $hargas[$i],
+//						'jumlah' => $jumlahs[$i],
+//					]);
+//				} else {
+//					PenjualanDetailModel::create([
+//						'penjualan_id' => $penjualan->penjualan_id,
+//						'barang_id' => $barangIds[$i],
+//						'harga' => $hargas[$i],
+//						'jumlah' => $jumlahs[$i],
+//					]);
+//				}
+//			}
+//
+//			DB::commit();
+//			return redirect('/penjualan')->with('success', 'Data penjualan berhasil diupdate');
+//		} catch (\Exception $e) {
+//			DB::rollback();
+//
+//			return redirect('/penjualan')->with('error', 'Data penjualan gagal diupdate');
+//		}
+//	}
 
-		$page = (object) [
-			'title' => 'Edit penjualan'
-		];
-
-		$activeMenu = 'penjualan';
-		return view('penjualan.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'penjualan'=>$penjualan, 'barang' => $barang, 'activeMenu' => $activeMenu]);
-	}
-
-	public function update(Request $request, string $id): ApplicationContract|Application|RedirectResponse|Redirector|\Exception
-	{
-		try {
-			$request->validate([
-				'penjualan_kode' => ['required', 'string', 'min:3', Rule::unique('t_penjualan')->ignore($id, 'penjualan_id')],
-				'pembeli' => 'required|string',
-				'detail_id' => 'required|array',
-				'barang_id' => 'required|array',
-				'harga' => 'required|array',
-				'jumlah' => 'required|array',
-				'deleted' => 'present|array',
-				'restored' => 'present|array',
-			]);
-
-			DB::beginTransaction();
-
-			$penjualan = PenjualanModel::findOrFail($id);
-
-			$penjualan->update([
-				'pembeli' => $request->pembeli,
-				'penjualan_kode' => $request->penjualan_kode,
-			]);
-
-			$penjualan->penjualan_tanggal = (new DateTime())->setTimezone(new \DateTimeZone("Asia/Jakarta"));
-			$penjualan->save();
-
-			$detailIds = $request->detail_id;
-			$barangIds = $request->barang_id;
-			$hargas = $request->harga;
-			$jumlahs = $request->jumlah;
-
-			for($i = 0; $i < count($detailIds); $i++) {
-				if ($detailIds[$i]) {
-					$detail = PenjualanDetailModel::findOrFail($detailIds[$i]);
-					$detail->update([
-						'barang_id' => $barangIds[$i],
-						'harga' => $hargas[$i],
-						'jumlah' => $jumlahs[$i],
-					]);
-				} else {
-					PenjualanDetailModel::create([
-						'penjualan_id' => $penjualan->penjualan_id,
-						'barang_id' => $barangIds[$i],
-						'harga' => $hargas[$i],
-						'jumlah' => $jumlahs[$i],
-					]);
-				}
-
-				if (in_array($detailIds[$i], $request->deleted)) {
-					$detail->delete();
-				}
-
-				if (in_array($detailIds[$i], $request->restored)) {
-					$detail->restore();
-				}
-			}
-
-			DB::commit();
-			return redirect('/penjualan')->with('success', 'Data penjualan berhasil diupdate');
-		} catch (\Exception $e) {
-			DB::rollback();
-
-			return redirect('/penjualan')->with('error', 'Data penjualan gagal diupdate');
-		}
-	}
-
-	public function deleteDetail($penjualanId, $detailId)
-	{
-		$penjualan = PenjualanModel::findOrFail($penjualanId);
-		$detail = $penjualan->details()->where('detail_id', $detailId)->firstOrFail();
-
-		 $detail->delete();
-
-		return redirect()->back()->with('success', 'Detail penjualan berhasil dihapus');
-	}
-
-	public function restoreDetail($penjualanId, $detailId)
-	{
-		$detail = PenjualanDetailModel::withTrashed()->where('penjualan_id', $penjualanId)->where('detail_id', $detailId)->firstOrFail();
-		$detail->restore();
-		return redirect()->back()->with('success', 'Detail penjualan berhasil dipulihkan');
-	}
+//	public function deleteDetail($penjualanId, $detailId)
+//	{
+//		$penjualan = PenjualanModel::findOrFail($penjualanId);
+//		$detail = $penjualan->details()->where('detail_id', $detailId)->firstOrFail();
+//
+//		 $detail->delete();
+//
+//		return redirect()->back()->with('success', 'Detail penjualan berhasil dihapus');
+//	}
+//
+//	public function restoreDetail($penjualanId, $detailId)
+//	{
+//		$detail = PenjualanDetailModel::withTrashed()->where('penjualan_id', $penjualanId)->where('detail_id', $detailId)->firstOrFail();
+//		$detail->restore();
+//		return redirect()->back()->with('success', 'Detail penjualan berhasil dipulihkan');
+//	}
 }
