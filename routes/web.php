@@ -83,6 +83,8 @@ Route::group(['prefix' => 'penjualan'], function () {
 	Route::get('/create', [TransaksiController::class, 'create']);
 	Route::get('/get-harga/{id}', [TransaksiController::class, 'getHarga']);
 	Route::post('/', [TransaksiController::class, 'store']);
+	Route::get('/{penjualan_id}/edit/{detail_id}/delete', [TransaksiController::class, 'deleteDetail']);
+	Route::get('/{penjualan_id}/edit/{detail_id}/restore', [TransaksiController::class, 'restoreDetail']);
 	Route::get('/{id}', [TransaksiController::class, 'show']);
 	Route::get('/{id}/edit', [TransaksiController::class, 'edit']);
 	Route::put('/{id}', [TransaksiController::class, 'update']);

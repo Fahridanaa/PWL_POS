@@ -154,8 +154,9 @@ class TransaksiController extends Controller
 
 	public function edit(string $id)
 	{
-		$penjualan = PenjualanModel::find($id);
-		$details = $penjualan->details;
+		$penjualan = PenjualanModel::with(['details' => function ($query) {
+			$query->withTrashed();
+		}, 'details.barang'])->findOrFail($id);
 		$barang = BarangModel::all();
 
 		$breadcrumb = (object) [
@@ -168,7 +169,7 @@ class TransaksiController extends Controller
 		];
 
 		$activeMenu = 'penjualan';
-		return view('penjualan.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'details' => $details, 'penjualan'=>$penjualan, 'barang' => $barang, 'activeMenu' => $activeMenu]);
+		return view('penjualan.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'penjualan'=>$penjualan, 'barang' => $barang, 'activeMenu' => $activeMenu]);
 	}
 
 	public function update(Request $request, string $id): ApplicationContract|Application|RedirectResponse|Redirector|\Exception
@@ -177,9 +178,12 @@ class TransaksiController extends Controller
 			$request->validate([
 				'penjualan_kode' => ['required', 'string', 'min:3', Rule::unique('t_penjualan')->ignore($id, 'penjualan_id')],
 				'pembeli' => 'required|string',
+				'detail_id' => 'required|array',
 				'barang_id' => 'required|array',
 				'harga' => 'required|array',
 				'jumlah' => 'required|array',
+				'deleted' => 'present|array',
+				'restored' => 'present|array',
 			]);
 
 			DB::beginTransaction();
@@ -194,26 +198,60 @@ class TransaksiController extends Controller
 			$penjualan->penjualan_tanggal = (new DateTime())->setTimezone(new \DateTimeZone("Asia/Jakarta"));
 			$penjualan->save();
 
+			$detailIds = $request->detail_id;
 			$barangIds = $request->barang_id;
 			$hargas = $request->harga;
 			$jumlahs = $request->jumlah;
 
-			foreach($penjualan->details as $index => $detail) {
-				$detail->update([
-					'barang_id' => $barangIds[$index],
-					'harga' => $hargas[$index],
-					'jumlah' => $jumlahs[$index],
-				]);
+			for($i = 0; $i < count($detailIds); $i++) {
+				if ($detailIds[$i]) {
+					$detail = PenjualanDetailModel::findOrFail($detailIds[$i]);
+					$detail->update([
+						'barang_id' => $barangIds[$i],
+						'harga' => $hargas[$i],
+						'jumlah' => $jumlahs[$i],
+					]);
+				} else {
+					PenjualanDetailModel::create([
+						'penjualan_id' => $penjualan->penjualan_id,
+						'barang_id' => $barangIds[$i],
+						'harga' => $hargas[$i],
+						'jumlah' => $jumlahs[$i],
+					]);
+				}
+
+				if (in_array($detailIds[$i], $request->deleted)) {
+					$detail->delete();
+				}
+
+				if (in_array($detailIds[$i], $request->restored)) {
+					$detail->restore();
+				}
 			}
 
 			DB::commit();
-
 			return redirect('/penjualan')->with('success', 'Data penjualan berhasil diupdate');
-
-		}catch (\Exception $e) {
+		} catch (\Exception $e) {
 			DB::rollback();
 
 			return redirect('/penjualan')->with('error', 'Data penjualan gagal diupdate');
 		}
+	}
+
+	public function deleteDetail($penjualanId, $detailId)
+	{
+		$penjualan = PenjualanModel::findOrFail($penjualanId);
+		$detail = $penjualan->details()->where('detail_id', $detailId)->firstOrFail();
+
+		 $detail->delete();
+
+		return redirect()->back()->with('success', 'Detail penjualan berhasil dihapus');
+	}
+
+	public function restoreDetail($penjualanId, $detailId)
+	{
+		$detail = PenjualanDetailModel::withTrashed()->where('penjualan_id', $penjualanId)->where('detail_id', $detailId)->firstOrFail();
+		$detail->restore();
+		return redirect()->back()->with('success', 'Detail penjualan berhasil dipulihkan');
 	}
 }

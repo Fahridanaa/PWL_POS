@@ -47,13 +47,15 @@
                                 <th>Harga</th>
                                 <th>Jumlah</th>
                                 <th>Total Harga</th>
+                                <th>Aksi</th> <!-- Kolom baru untuk tombol hapus -->
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($details as $detail)
-                                <tr>
+                            @foreach($penjualan->details as $detail)
+                                <tr class="{{ $detail->deleted_at ? 'deleted' : '' }}">
+                                    <input type="hidden" name="detail_id[]" value="{{ $detail->id }}">
                                     <td>
-                                        <select name="barang_id[]" class="form-control barang" required>
+                                        <select name="barang_id[]" class="form-control barang" required @if($detail->deleted_at) disabled @endif>
                                             <option value="">Pilih Barang</option>
                                             @foreach ($barang as $item)
                                                 <option value="{{ $item->barang_id }}"
@@ -62,15 +64,26 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" class="form-control harga" name="harga[]" value="{{ $detail->harga }}" readonly></td>
-                                    <td><input type="number" class="form-control jumlah" name="jumlah[]" value="{{ $detail->jumlah }}" required></td>
+                                    <td><input type="number" class="form-control harga" name="harga[]"
+                                               value="{{ $detail->harga }}" readonly></td>
+                                    <td><input type="number" class="form-control jumlah" name="jumlah[]"
+                                               value="{{ $detail->jumlah }}" required @if($detail->deleted_at) readonly @endif></td>
                                     <td>
-                                        <input type="number" class="form-control total_harga" name="total_harga[]" value="{{ $detail->harga * $detail->jumlah}}" readonly>
+                                        <input type="number" class="form-control total_harga" name="total_harga[]"
+                                               value="{{ $detail->harga * $detail->jumlah}}" readonly>
                                     </td>
+                                    @if($detail->deleted_at)
+                                        <td>
+                                            <a href="/penjualan/{{ $penjualan->penjualan_id }}/edit/{{ $detail->detail_id }}/restore" class="btn btn-success">Pulihkan</a>
+                                        </td>
+                                    @else
+                                        <td><a href="/penjualan/{{ $penjualan->penjualan_id }}/edit/{{ $detail->detail_id }}/delete" class="btn btn-danger">Hapus</a></td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
+                        <button type="button" class="btn btn-primary btn-sm" id="tambahBarang">Tambah Barang</button>
                     </div>
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label"></label>
@@ -85,15 +98,20 @@
     </div>
 @endsection
 @push('css')
+    <style>
+        .deleted {
+            opacity: 0.5;
+        }
+    </style>
 @endpush
 @push('js')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Mengambil HTML untuk dropdown barang
             var barangDropdownHTML = '<select name="barang_id[]" class="form-control barang" required><option value="">Pilih Barang</option>@foreach ($barang as $item)<option value="{{ $item->barang_id }}">{{ $item->barang_name }}</option>@endforeach</select>';
 
             // Ketika tombol "Tambah Barang" diklik
-            $('#tambahBarang').click(function() {
+            $('#tambahBarang').click(function () {
                 // Tambahkan baris baru ke tabel detail penjualan dengan barangDropdownHTML
                 $('#detail tbody').append('<tr>' +
                     '<td>' + barangDropdownHTML + '</td>' +
@@ -105,23 +123,23 @@
 
             let detailTable = $('#detail');
             // Ketika dropdown barang dipilih, perbarui harga secara otomatis
-            detailTable.on('change', 'select[name="barang_id[]"]', function() {
+            detailTable.on('change', 'select[name="barang_id[]"]', function () {
                 var selectedId = $(this).val();
                 var hargaInput = $(this).closest('tr').find('.harga');
                 // Melakukan AJAX request untuk mendapatkan harga barang berdasarkan ID yang dipilih
                 $.ajax({
                     url: '{{ url("penjualan/get-harga") }}/' + selectedId,
                     type: 'GET',
-                    success: function(response) {
+                    success: function (response) {
                         hargaInput.val(response.harga_jual);
                     },
-                    error: function() {
+                    error: function () {
                         hargaInput.val('');
                     }
                 });
             });
 
-            detailTable.on('input', 'input[name="jumlah[]"]', function() {
+            detailTable.on('input', 'input[name="jumlah[]"]', function () {
                 let jumlah = $(this).val() || 0;
                 let harga = $(this).closest('tr').find('.harga').val();
                 let totalHargaInput = $(this).closest('tr').find('.total_harga');
