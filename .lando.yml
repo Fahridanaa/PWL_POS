@@ -1,0 +1,12 @@
+name: pwlpos
+recipe: laravel
+config:
+  webroot: public
+services:
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
+proxy:
+  pma:
+    - pma.lndo.site
