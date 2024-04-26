@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
- * 
+ *
  *
  * @property int $user_id
  * @property int $level_id
@@ -29,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\LevelModel $level
  * @mixin \Eloquent
  */
-class UserModel extends Model
+class UserModel extends Authenticatable
 {
 	use HasFactory;
 
