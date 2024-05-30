@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\BarangController;
+use App\Http\Controllers\Api\TransaksiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,8 @@ Route::post('/barang', [BarangController::class, 'store']);
 Route::get('/barang/{barang}', [BarangController::class, 'show']);
 Route::put('/barang/{barang}', [BarangController::class, 'update']);
 Route::delete('/barang/{barang}', [BarangController::class, 'destroy']);
+
+Route::resource('transaksi', TransaksiController::class)->except(['create', 'edit', 'update', 'destroy']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
