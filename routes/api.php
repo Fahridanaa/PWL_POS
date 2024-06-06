@@ -35,11 +35,11 @@ Route::put('/levels/{level}', [LevelController::class, 'update']);
 Route::delete('/levels/{level}', [LevelController::class, 'destroy']);
 
 // Route untuk User
-Route::get('users', [UserController::class, 'index']);
-Route::post('users', [UserController::class, 'store']);
-Route::get('users/{user}', [UserController::class, 'show']);
-Route::put('users/{user}', [UserController::class, 'update']);
-Route::delete('users/{user}', [UserController::class, 'destroy']);
+//Route::get('users', [UserController::class, 'index']);
+//Route::post('users', [UserController::class, 'store']);
+//Route::get('users/{user}', [UserController::class, 'show']);
+//Route::put('users/{user}', [UserController::class, 'update']);
+//Route::delete('users/{user}', [UserController::class, 'destroy']);
 
 Route::get('kategori', [KategoriController::class, 'index']);
 Route::post('kategori', [KategoriController::class, 'store']);
